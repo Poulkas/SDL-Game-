@@ -220,7 +220,7 @@ int main(int argc, char *argv[]){
     SDL_Rect rect6[CUATRO];
 
     /* SALIDA DEL JUEGO */
-    int SALIR=0;
+    bool SALIR = false;
 
     SDL_Event event;
     uint32_t now_time, last_time;
@@ -304,6 +304,8 @@ int main(int argc, char *argv[]){
                         if(event.key.keysym.sym==SDLK_LEFT){ n_ima=9; i=0; izquierda=0; }
                         if(event.key.keysym.sym==SDLK_DOWN){ n_ima=3; i=0; abajo=0; }
                         if(event.key.keysym.sym==SDLK_RIGHT){ n_ima=6; i=0; derecha=0; }
+                        break;
+                    case SDL_QUIT: SALIR = true;
                 }
             }
 
@@ -671,11 +673,11 @@ int main(int argc, char *argv[]){
             if(vida<=300 && vida>0){
                 n_nukes=1;
             }
-            if(vida<=0){
+            if(vida<=0 || SALIR){
                 n_nukes = 0;
                 Mix_PlayChannel(-1, sonido[FIN], 0);
                 cout<<"FIN del juego\nSe acabo la vida"<<endl;
-                SALIR=1;
+                SALIR=true;
             }
             if(n_nukes==3){
                 if(j>=7){
@@ -936,7 +938,7 @@ int main(int argc, char *argv[]){
             for(int g=0; g<n_nukes; g++){
                 SDL_BlitSurface(nuke[n],NULL,pantalla,&rect4[g]);
             }
-            if(SALIR==1){
+            if(SALIR){
                 SDL_BlitSurface(nuke[CERO], NULL, pantalla, &rect);
                 SDL_UpdateWindowSurface(ventana);
                 SDL_Delay(9500);
